@@ -1,12 +1,34 @@
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContacts } from '../slices/contactsSlice';
 import ContactItem from './ContactItem';
 
 const ContactList = () => {
-  const contacts = useSelector(state => state.contacts);
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.data);
   const filter = useSelector(state => state.filter);
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  const { status, error } = useSelector(state => state.contacts);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  const filteredContacts = contacts.filter(contact => {
+    if (typeof contact.name === 'string') {
+      return contact.name.toLowerCase().includes(filter.toLowerCase());
+    } else {
+      console.error('Invalid contact name type:', contact);
+      return false;
+    }
+  });
+
+  if (status === 'loading') {
+    return <p>Loading contacts...</p>;
+  }
+
+  if (status === 'failed') {
+    return <p className="error">Failed to load contacts: {error}</p>;
+  }
 
   return (
     <ul>
