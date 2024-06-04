@@ -13,14 +13,16 @@ const ContactList = () => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  const filteredContacts = contacts.filter(contact => {
-    if (typeof contact.name === 'string') {
-      return contact.name.toLowerCase().includes(filter.toLowerCase());
-    } else {
-      console.error('Invalid contact name type:', contact);
-      return false;
-    }
-  });
+  const filteredContacts =
+    contacts &&
+    contacts.filter(contact => {
+      if (typeof contact.name === 'string') {
+        return contact.name.toLowerCase().includes(filter.toLowerCase());
+      } else {
+        console.error('Invalid contact name type:', contact);
+        return false;
+      }
+    });
 
   if (status === 'loading') {
     return <p>Loading contacts...</p>;
@@ -32,9 +34,10 @@ const ContactList = () => {
 
   return (
     <ul>
-      {filteredContacts.map(contact => (
-        <ContactItem key={contact.id} contact={contact} />
-      ))}
+      {filteredContacts &&
+        filteredContacts.map(contact => (
+          <ContactItem key={contact.id} contact={contact} />
+        ))}
     </ul>
   );
 };
