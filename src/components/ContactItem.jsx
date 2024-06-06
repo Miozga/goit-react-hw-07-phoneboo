@@ -6,7 +6,7 @@ const ContactItem = ({ contact }) => {
 
   return (
     <li>
-      {contact.name}: {contact.number}
+      {contact.name}: {contact.phone}
       <button onClick={() => dispatch(deleteContact(contact.id))}>
         Delete
       </button>
